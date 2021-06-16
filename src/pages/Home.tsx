@@ -32,7 +32,7 @@ const Home = () => {
       />
       <Wrapper>
         <Typography paragraph variant='h5'>
-          Welcome to your new app!
+          Welcome to your new app Hume!
         </Typography>
 
         <Typography paragraph variant='h5'>

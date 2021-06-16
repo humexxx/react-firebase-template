@@ -43,9 +43,9 @@ jobs:
       # Add FIREBASE_TOKEN as a secret to your github project,
       #   you can generate a firebase token with the command: yarn firebase login:ci
       # Uncomment the following step to deploy to firebase
-      # - name: Deploy to Firebase
-      #   uses: w9jds/firebase-action@master
-      #   with:
-      #     args: deploy
-      #   env:
-      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
