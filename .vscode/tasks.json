@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start:server",
+			"problemMatcher": [],
+			"label": "npm: start:server",
+			"detail": "firebase emulators:start --only firestore,auth"
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"problemMatcher": [],
+			"label": "npm: start",
+			"detail": "react-scripts start"
+		}
+	]
+}

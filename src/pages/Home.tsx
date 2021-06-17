@@ -6,6 +6,11 @@ import AppBar from '../components/AppBar'
 import { useForm } from 'react-hook-form'
 import formErrorMessages from '../utils/formErrorMessages'
 
+import medicos from '../_data/medicos.json'
+import casos from '../_data/casos.json'
+import facturas from '../_data/facturas.json'
+import abonos from '../_data/abonos.json'
+
 const Home = () => {
   const {
     register,
@@ -13,6 +18,16 @@ const Home = () => {
     reset,
     formState: { errors }
   } = useForm<{ name: string }>()
+
+  const _medicos = medicos.filter(m => m.medico)
+  _medicos.forEach((m: any) => {
+    m.user = m.medico.replaceAll(' ', '.').toLowerCase()
+    m.facturas = facturas.filter(f => f.medico_id === m.id)
+    m.facturas.forEach((f: any) => {
+      f.abonos = abonos.filter(a => a.factura_id === f.id)
+      f.caso = casos.find((c: any) => c.id === f.caso_id)
+    })
+  })
 
   return (
     <>
