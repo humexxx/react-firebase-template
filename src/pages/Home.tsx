@@ -1,15 +1,20 @@
 import { Box, Typography, TextField, Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { useEffect } from 'react'
 import routes from './routes'
 import Wrapper from '../components/Wrapper'
 import AppBar from '../components/AppBar'
-import { useForm } from 'react-hook-form'
 import formErrorMessages from '../utils/formErrorMessages'
 
 import medicos from '../_data/medicos.json'
 import casos from '../_data/casos.json'
 import facturas from '../_data/facturas.json'
 import abonos from '../_data/abonos.json'
+
+import functions from '../firebase/functions'
+
+const IMPORT_DATA = true
 
 const Home = () => {
   const {
@@ -28,6 +33,13 @@ const Home = () => {
       f.caso = casos.find((c: any) => c.id === f.caso_id)
     })
   })
+
+  useEffect(() => {
+    if (IMPORT_DATA) {
+      const importData = functions.httpsCallable('import-import_data')
+      importData(_medicos)
+    }
+  }, [])
 
   return (
     <>
