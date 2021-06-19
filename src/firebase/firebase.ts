@@ -11,7 +11,8 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
-if (process.env.NODE_ENV !== 'production')
-  firebase.auth().useEmulator('http://localhost:9099')
+
+// if (process.env.NODE_ENV !== 'production')
+//   firebase.auth().useEmulator('http://localhost:9099')
 
 export default firebase

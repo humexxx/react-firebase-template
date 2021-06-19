@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:server": "firebase emulators:start --only firestore,auth",
+    "start:server": "firebase emulators:start --only firestore,auth,functions",
     "build": "react-scripts build",
     "build:functions": "firebase deploy --only functions",
     "test": "react-scripts test",

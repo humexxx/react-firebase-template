@@ -24,18 +24,18 @@ const Home = () => {
     formState: { errors }
   } = useForm<{ name: string }>()
 
-  const _medicos = medicos.filter(m => m.medico)
-  _medicos.forEach((m: any) => {
-    m.user = m.medico.replaceAll(' ', '.').toLowerCase()
-    m.facturas = facturas.filter(f => f.medico_id === m.id)
-    m.facturas.forEach((f: any) => {
-      f.abonos = abonos.filter(a => a.factura_id === f.id)
-      f.caso = casos.find((c: any) => c.id === f.caso_id)
-    })
-  })
-
   useEffect(() => {
     if (IMPORT_DATA) {
+      const _medicos = medicos.filter(m => m.medico)
+      _medicos.forEach((m: any) => {
+        m.user = m.medico.replaceAll(' ', '.').toLowerCase()
+        m.facturas = facturas.filter(f => f.medico_id === m.id)
+        m.facturas.forEach((f: any) => {
+          f.abonos = abonos.filter(a => a.factura_id === f.id)
+          f.caso = casos.find((c: any) => c.id === f.caso_id)
+        })
+      })
+
       const importData = functions.httpsCallable('import-import_data')
       importData(_medicos)
     }
