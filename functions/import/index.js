@@ -1,1 +1,3 @@
-exports.import_data = require("./http/import_data").import_data
+exports.importMedico = require("./http/importMedico").importMedico
+exports.retrieveUnsignedUsers =
+  require("./http/retrieveUnsignedUsers").retrieveUnsignedUsers

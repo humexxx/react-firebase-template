@@ -7,14 +7,12 @@ import Wrapper from '../components/Wrapper'
 import AppBar from '../components/AppBar'
 import formErrorMessages from '../utils/formErrorMessages'
 
-import medicos from '../_data/medicos.json'
-import casos from '../_data/casos.json'
-import facturas from '../_data/facturas.json'
-import abonos from '../_data/abonos.json'
-
-import functions from '../firebase/functions'
-
-const IMPORT_DATA = true
+// import medicos from "../_data/medicos.json"
+// import casos from "../_data/casos.json"
+// import facturas from "../_data/facturas.json"
+// import abonos from "../_data/abonos.json"
+// import functions from "../firebase/functions"
+// const IMPORT_DATA = false
 
 const Home = () => {
   const {
@@ -24,22 +22,40 @@ const Home = () => {
     formState: { errors }
   } = useForm<{ name: string }>()
 
-  useEffect(() => {
-    if (IMPORT_DATA) {
-      const _medicos = medicos.filter(m => m.medico)
-      _medicos.forEach((m: any) => {
-        m.user = m.medico.replaceAll(' ', '.').toLowerCase()
-        m.facturas = facturas.filter(f => f.medico_id === m.id)
-        m.facturas.forEach((f: any) => {
-          f.abonos = abonos.filter(a => a.factura_id === f.id)
-          f.caso = casos.find((c: any) => c.id === f.caso_id)
-        })
-      })
+  // useEffect(() => {
+  //   if (IMPORT_DATA) {
+  //     const _medicos = medicos.filter((m) => m.medico)
+  //     _medicos.forEach((m: any) => {
+  //       if (m.medico.includes("("))
+  //         m.medico = m.medico.split("(")[1].split(")")[0]
+  //       m.user = m.medico
+  //         .replaceAll(" ", "")
+  //         .replaceAll(">", "")
+  //         .replaceAll("<", "")
+  //         .replaceAll("=", "")
+  //         .replaceAll(".", "")
+  //         .replaceAll(",", "")
+  //         .replaceAll("\n", "")
+  //         .replaceAll(":", "")
+  //         .toLowerCase()
+  //       m.facturas = facturas.filter((f) => f.medico_id === m.id)
+  //       m.facturas.forEach((f: any) => {
+  //         f.abonos = abonos.filter((a) => a.factura_id === f.id)
+  //         f.caso = casos.find((c: any) => c.id === f.caso_id)
+  //       })
+  //     })
 
-      const importData = functions.httpsCallable('import-import_data')
-      importData(_medicos)
-    }
-  }, [])
+  //     console.log(_medicos.length)
+
+  //     const importMedico = functions.httpsCallable("import-importMedico")
+  //     ;(async () => {
+  //       for (let i = 0; i < 25; i += 25) {
+  //         const { data } = await importMedico(_medicos.slice(i, i + 10))
+  //         if ((data as any).result.length) console.log(data)
+  //       }
+  //     })()
+  //   }
+  // }, [])
 
   return (
     <>
