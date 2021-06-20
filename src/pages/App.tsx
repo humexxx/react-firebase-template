@@ -6,6 +6,9 @@ import routes from './routes'
 import { useSetRecoilState } from 'recoil'
 import { sessionState } from '../state'
 import firebase from '../firebase'
+import PrivateRoute from '../components/PrivateRoute'
+import Dashboard from './Dashboard'
+import Abonos from './Abonos'
 
 const App = () => {
   const setSession = useSetRecoilState(sessionState)
@@ -28,8 +31,14 @@ const App = () => {
 
   return (
     <Switch>
-      <Route path={routes.signin} children={<Signin />} />
-      <Route path={routes.home} children={<Home />} />
+      <Route exact={true} path={routes.signin} children={<Signin />} />
+      <Route exact={true} path={routes.home} children={<Home />} />
+      <PrivateRoute
+        exact={true}
+        path={routes.dashboard}
+        component={Dashboard}
+      />
+      <PrivateRoute path={routes.abonos} component={Abonos} />
       <Redirect to={routes.home} />
     </Switch>
   )

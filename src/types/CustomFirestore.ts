@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import FirestoreCollectionPaths from './FirestoreCollectionPaths'
 
 interface CustomDocumentReference<T>
   extends firebase.firestore.DocumentReference<T> {
@@ -22,9 +21,9 @@ interface CustomCollectionReference<T>
 }
 
 interface CustomFirestore extends firebase.firestore.Firestore {
-  collection<T extends keyof FirestoreCollectionPaths>(
+  collection<T extends keyof any>(
     collectionPath: T
-  ): CustomCollectionReference<FirestoreCollectionPaths[T]>
+  ): CustomCollectionReference<any[T]>
 }
 
 export default CustomFirestore

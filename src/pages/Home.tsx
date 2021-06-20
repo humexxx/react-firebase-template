@@ -1,7 +1,6 @@
 import { Box, Typography, TextField, Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { useEffect } from 'react'
 import routes from './routes'
 import Wrapper from '../components/Wrapper'
 import AppBar from '../components/AppBar'
