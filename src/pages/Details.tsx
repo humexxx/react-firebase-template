@@ -10,7 +10,7 @@ import { useAbonos } from '../utils/hooks/useAbonos'
 import { Box } from '@material-ui/core'
 
 const columns: GridColDef[] = [
-  { field: 'consecutivo', headerName: 'Consecutivo', width: 175 },
+  { field: 'internal_id', headerName: 'Factura', width: 175 },
   {
     field: 'fecha',
     headerName: 'Fecha',
@@ -36,11 +36,14 @@ const columns: GridColDef[] = [
   }
 ]
 
-const Abonos: React.FC<any> = ({ match }) => {
-  const factura_id = match.params.id
+const Details: React.FC<any> = ({ match }) => {
+  const factura_id = match.params.factura_id
+  const caso_id = match.params.caso_id
+
   const value = useRecoilValue(sessionState)
   const { abonos } = useAbonos(value.user?.uid, factura_id)
-  const { loading } = useFirestoreDocument('medicos', value.user?.uid as string)
+  const { data, loading } = useFirestoreDocument('casos', caso_id)
+  console.log(data)
 
   if (loading) return null
 
@@ -49,10 +52,26 @@ const Abonos: React.FC<any> = ({ match }) => {
       <AppBar title='Abonos' backTo={routes.dashboard} />
       <Wrapper>
         <Typography paragraph variant='h5'>
-          Abonos de factura
+          Detalles de factura
         </Typography>
 
-        <Box mb={5}></Box>
+        <Box mt={3} mb={5}>
+          {data.caso && (
+            <Typography paragraph>
+              <b>Caso:</b> {data?.caso}
+            </Typography>
+          )}
+          {data.procedimiento && (
+            <Typography paragraph>
+              <b>Procedimiento:</b> {data.procedimiento}
+            </Typography>
+          )}
+          {data.notas_medicas && (
+            <Typography paragraph>
+              <b>Notas médicas:</b> {data.notas_medicas}
+            </Typography>
+          )}
+        </Box>
 
         <DataGrid
           autoHeight={true}
@@ -66,4 +85,4 @@ const Abonos: React.FC<any> = ({ match }) => {
   )
 }
 
-export default Abonos
+export default Details

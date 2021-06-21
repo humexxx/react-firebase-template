@@ -2,7 +2,7 @@ const routes = {
   home: '/',
   signin: '/signin',
   dashboard: '/dashboard',
-  abonos: '/abonos/:id'
+  details: '/details/:caso_id/:factura_id'
 }
 
 export default routes

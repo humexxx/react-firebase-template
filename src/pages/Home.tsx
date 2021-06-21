@@ -59,7 +59,7 @@ const Home = () => {
   return (
     <>
       <AppBar
-        title='fullstrapp'
+        title='Medicos'
         actions={
           <Button
             color='primary'
@@ -68,45 +68,40 @@ const Home = () => {
             to={routes.signin}
             variant='contained'
           >
-            Sign In
+            Ingresar
           </Button>
         }
       />
       <Wrapper>
         <Typography paragraph variant='h5'>
-          Welcome to your new app Hume!
-        </Typography>
-
-        <Typography paragraph variant='h5'>
-          Don't forget to configure your firebase settings in{' '}
-          <code>/src/firebase/firebase.ts</code>
+          Aplicación de médicos
         </Typography>
 
         <Box mt={6}>
           <Typography paragraph>
-            This is an example form using react-hook-form
+            Más información sobre la aplicación aquí
           </Typography>
         </Box>
-        <form
-          onSubmit={handleSubmit(vals => {
+        {/* <form
+          onSubmit={handleSubmit((vals) => {
             console.log(vals)
             reset()
           })}
         >
           <TextField
-            label='Enter your name'
-            variant='outlined'
+            label="Enter your name"
+            variant="outlined"
             fullWidth
-            {...register('name', {
-              required: formErrorMessages.required
+            {...register("name", {
+              required: formErrorMessages.required,
             })}
             error={!!errors.name}
-            helperText={errors.name?.message || ' '}
+            helperText={errors.name?.message || " "}
           />
-          <Button type='submit' color='primary'>
+          <Button type="submit" color="primary">
             Submit
           </Button>
-        </form>
+        </form> */}
       </Wrapper>
     </>
   )

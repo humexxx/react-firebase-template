@@ -9,7 +9,7 @@ const PrivateRoute = ({ component, ...rest }: any) => {
   if (result.isAuthenticating) return null
   const routeComponent = (props: any) =>
     result.user ? (
-      React.createElement(component, props)
+      React.createElement(component, { ...props, user: result.user })
     ) : (
       <Redirect to={{ pathname: routes.signin }} />
     )

@@ -4,8 +4,6 @@ import { DataGrid, GridColDef } from '@material-ui/data-grid'
 import routes from './routes'
 import Wrapper from '../components/Wrapper'
 import AppBar from '../components/AppBar'
-import { useRecoilValue } from 'recoil'
-import { sessionState } from '../state'
 import useFirestoreDocument from '../utils/hooks/useFirestoreDocument'
 import { useFacturas } from '../utils/hooks/useFacturas'
 import { Box } from '@material-ui/core'
@@ -13,15 +11,18 @@ import { Box } from '@material-ui/core'
 const columns: GridColDef[] = [
   { field: 'consecutivo', headerName: 'Consecutivo', width: 175 },
   {
-    field: 'monto_dolares',
-    headerName: 'Monto Dolares',
-    width: 175,
-    type: 'number'
+    field: 'paciente',
+    headerName: 'Paciente',
+    width: 175
   },
   {
-    field: 'tc',
-    headerName: 'TC',
-    type: 'number',
+    field: 'seguro',
+    headerName: 'Seguro',
+    width: 175
+  },
+  {
+    field: 'fecha_ingreso',
+    headerName: 'Fecha Ingreso',
     width: 175
   },
   {
@@ -37,14 +38,12 @@ const columns: GridColDef[] = [
   }
 ]
 
-const Dashboard: React.FC<any> = ({ history }) => {
-  const value = useRecoilValue(sessionState)
-
+const Dashboard: React.FC<any> = ({ history, user }) => {
+  const { facturas } = useFacturas(user.uid)
   const { loading, data: medico } = useFirestoreDocument(
     'medicos',
-    value.user?.uid as string
+    user.uid as string
   )
-  const { facturas } = useFacturas(value.user?.uid)
 
   if (loading) return null
   return (
@@ -70,7 +69,7 @@ const Dashboard: React.FC<any> = ({ history }) => {
 
         <Box mt={3} mb={5}>
           <Typography paragraph>
-            <b>Nombre:</b> {value.user?.displayName}
+            <b>Nombre:</b> {user.displayName}
           </Typography>
           {medico.institucion && (
             <Typography paragraph>
@@ -89,8 +88,8 @@ const Dashboard: React.FC<any> = ({ history }) => {
           rows={facturas}
           columns={columns}
           pageSize={5}
-          onRowClick={row => {
-            history.push(`abonos/${row.id}`)
+          onRowClick={e => {
+            history.push(`details/${e.row.caso_id}/${e.id}`)
           }}
         />
       </Wrapper>

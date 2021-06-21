@@ -8,7 +8,7 @@ import { sessionState } from '../state'
 import firebase from '../firebase'
 import PrivateRoute from '../components/PrivateRoute'
 import Dashboard from './Dashboard'
-import Abonos from './Abonos'
+import Details from './Details'
 
 const App = () => {
   const setSession = useSetRecoilState(sessionState)
@@ -38,7 +38,7 @@ const App = () => {
         path={routes.dashboard}
         component={Dashboard}
       />
-      <PrivateRoute path={routes.abonos} component={Abonos} />
+      <PrivateRoute path={routes.details} component={Details} />
       <Redirect to={routes.home} />
     </Switch>
   )
