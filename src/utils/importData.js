@@ -3,6 +3,7 @@ import casos from '../_data/casos.json'
 import facturas from '../_data/facturas.json'
 import abonos from '../_data/abonos.json'
 import pacientes from '../_data/pacientes.json'
+import aseguradoras from '../_data/aseguradoras.json'
 import functions from '../firebase/functions'
 
 export const importData = () => {
@@ -16,6 +17,10 @@ export const importData = () => {
         f.pacienteEntity = pacientes.find(
           p => p.PacienteID === f.caso.PacienteID
         )
+      if (f.pacienteEntity)
+        f.aseguradoraEntity = aseguradoras.find(
+          a => a.SeguroID === f.pacienteEntity.SeguroID
+        )
     })
   })
 
@@ -23,9 +28,9 @@ export const importData = () => {
 
   const importMedico = functions.httpsCallable('import-importData')
   ;(async () => {
-    for (let i = 0; i < _medicos.length; i += 50) {
-      console.log(`${i}-${i + 50} of ${_medicos.length}`)
-      const { data } = await importMedico(_medicos.slice(i, i + 50))
+    for (let i = 0; i < _medicos.length; i += 25) {
+      console.log(`${i}-${i + 25} of ${_medicos.length}`)
+      const { data } = await importMedico(_medicos.slice(i, i + 25))
       if (data.result.length) console.log(data)
     }
   })()

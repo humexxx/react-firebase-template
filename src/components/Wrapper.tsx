@@ -9,7 +9,7 @@ type Props = {
 
 const Wrapper = ({
   children,
-  maxWidth = 'md',
+  maxWidth = 'lg',
   marginTop = 3,
   marginBottom = 5
 }: Props) => {

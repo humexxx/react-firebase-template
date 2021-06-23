@@ -9,16 +9,16 @@ import { useFacturas } from '../utils/hooks/useFacturas'
 import { Box } from '@material-ui/core'
 
 const columns: GridColDef[] = [
-  { field: 'consecutivo', headerName: 'Consecutivo', width: 175 },
+  { field: 'Consecutivo', headerName: 'Consecutivo', width: 175 },
   {
-    field: 'paciente',
+    field: 'paciente_name',
     headerName: 'Paciente',
-    width: 175
+    width: 235
   },
   {
-    field: 'seguro',
+    field: 'seguro_name',
     headerName: 'Seguro',
-    width: 175
+    width: 235
   },
   {
     field: 'fecha_ingreso',
@@ -26,12 +26,12 @@ const columns: GridColDef[] = [
     width: 175
   },
   {
-    field: 'cancelado',
+    field: 'isCancelado',
     headerName: 'Cancelado',
-    width: 175
+    width: 150
   },
   {
-    field: 'monto_total',
+    field: 'Monto Total',
     headerName: 'Monto Total',
     width: 175,
     type: 'number'
@@ -46,6 +46,14 @@ const Dashboard: React.FC<any> = ({ history, user }) => {
   )
 
   if (loading) return null
+
+  facturas.forEach(f => {
+    f.paciente_name = f.pacienteEntity?.ContactFirstName
+    f.fecha_ingreso = f.caso && f.caso['Fecha de Ingreso']
+    f.seguro_name =
+      f.aseguradoraEntity && f.aseguradoraEntity['Nombre del Seguro']
+    f.isCancelado = f.Cancelado ? 'Cancelado' : 'Sin cancelar'
+  })
   console.log(facturas)
 
   return (
@@ -91,7 +99,7 @@ const Dashboard: React.FC<any> = ({ history, user }) => {
           columns={columns}
           pageSize={5}
           onRowClick={e => {
-            history.push(`details/${e.row.caso_id}/${e.id}`)
+            history.push(`details/${e.id}`)
           }}
         />
       </Wrapper>
