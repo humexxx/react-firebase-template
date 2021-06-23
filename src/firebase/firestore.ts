@@ -15,7 +15,7 @@ const firestore = firebase.firestore() as CustomFirestore
 //   })
 // }
 
-window.addEventListener('offline', () => firestore.disableNetwork())
-window.addEventListener('online', () => firestore.enableNetwork())
+// window.addEventListener('offline', () => firestore.disableNetwork())
+// window.addEventListener('online', () => firestore.enableNetwork())
 
 export default firestore

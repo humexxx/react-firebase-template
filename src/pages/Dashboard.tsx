@@ -46,6 +46,8 @@ const Dashboard: React.FC<any> = ({ history, user }) => {
   )
 
   if (loading) return null
+  console.log(facturas)
+
   return (
     <>
       <AppBar
