@@ -11,6 +11,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LandingImage from '../assets/images/landing.jpg'
+import { useAuth } from '../context/AuthContext'
+import { useSnackbar } from 'notistack'
+import { useState } from 'react'
 
 function Copyright() {
   return (
@@ -60,6 +63,29 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignInSide() {
   const classes = useStyles()
+  const { login } = useAuth()
+  const { enqueueSnackbar } = useSnackbar()
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleSubmit = async (e: any) => {
+    setLoading(true)
+    e.preventDefault()
+    try {
+      await login(email, password)
+    } catch (e) {
+      enqueueSnackbar(e.message, {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Grid container component='main' className={classes.root}>
@@ -73,14 +99,15 @@ export default function SignInSide() {
           <Typography component='h1' variant='h5'>
             Segrupex
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               variant='outlined'
               margin='normal'
               required
               fullWidth
-              id='email'
               label='Email'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               name='email'
               autoComplete='email'
               autoFocus
@@ -90,11 +117,11 @@ export default function SignInSide() {
               margin='normal'
               required
               fullWidth
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               name='password'
               label='Contraseña'
               type='password'
-              id='password'
-              autoComplete='current-password'
             />
 
             <Button
@@ -103,6 +130,7 @@ export default function SignInSide() {
               variant='contained'
               color='primary'
               className={classes.submit}
+              disabled={loading}
             >
               Ingresar
             </Button>
