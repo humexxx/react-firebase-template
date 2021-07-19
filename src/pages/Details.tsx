@@ -3,10 +3,6 @@ import { DataGrid, GridColDef } from '@material-ui/data-grid'
 import routes from './routes'
 import Wrapper from '../components/Wrapper'
 import AppBar from '../components/AppBar'
-import { useRecoilValue } from 'recoil'
-import { sessionState } from '../state'
-import { useAbonos } from '../utils/hooks/useAbonos'
-import useFirestoreDocument from '../utils/hooks/useFirestoreDocument'
 
 const columns: GridColDef[] = [
   { field: 'COnsecutivo', headerName: 'Consecutivo', width: 250 },
@@ -31,54 +27,55 @@ const columns: GridColDef[] = [
 ]
 
 const Details: React.FC<any> = ({ match }) => {
-  const factura_id = match.params.factura_id
+  return null
+  // const factura_id = match.params.factura_id
 
-  const value = useRecoilValue(sessionState)
-  const { abonos } = useAbonos(value.user?.uid, factura_id)
-  const { data, loading } = useFirestoreDocument(
-    `medicos/${value.user?.uid}/facturas`,
-    factura_id
-  )
-  console.log(data)
+  // const value = useRecoilValue(sessionState)
+  // const { abonos } = useAbonos(value.user?.uid, factura_id)
+  // const { data, loading } = useFirestoreDocument(
+  //   `medicos/${value.user?.uid}/facturas`,
+  //   factura_id
+  // )
+  // console.log(data)
 
-  if (loading) return null
+  // if (loading) return null
 
-  return (
-    <>
-      <AppBar title='Abonos' backTo={routes.dashboard} />
-      <Wrapper>
-        <Typography paragraph variant='h5'>
-          Detalles de factura
-        </Typography>
+  // return (
+  //   <>
+  //     <AppBar title="Abonos" backTo={routes.dashboard} />
+  //     <Wrapper>
+  //       <Typography paragraph variant="h5">
+  //         Detalles de factura
+  //       </Typography>
 
-        <Box mt={3} mb={5}>
-          {data.caso.Diagnostico && (
-            <Typography paragraph>
-              <b>Caso:</b> {data.caso.Diagnostico}
-            </Typography>
-          )}
-          {data.caso.Procedimiento && (
-            <Typography paragraph>
-              <b>Procedimiento:</b> {data.caso.Procedimiento}
-            </Typography>
-          )}
-          {data.caso['Notas M�dicas'] && (
-            <Typography paragraph>
-              <b>Notas médicas:</b> {data.caso['Notas M�dicas']}
-            </Typography>
-          )}
-        </Box>
+  //       <Box mt={3} mb={5}>
+  //         {data.caso.Diagnostico && (
+  //           <Typography paragraph>
+  //             <b>Caso:</b> {data.caso.Diagnostico}
+  //           </Typography>
+  //         )}
+  //         {data.caso.Procedimiento && (
+  //           <Typography paragraph>
+  //             <b>Procedimiento:</b> {data.caso.Procedimiento}
+  //           </Typography>
+  //         )}
+  //         {data.caso["Notas M�dicas"] && (
+  //           <Typography paragraph>
+  //             <b>Notas médicas:</b> {data.caso["Notas M�dicas"]}
+  //           </Typography>
+  //         )}
+  //       </Box>
 
-        <DataGrid
-          autoHeight={true}
-          rows={abonos}
-          columns={columns}
-          pageSize={5}
-          disableSelectionOnClick={true}
-        />
-      </Wrapper>
-    </>
-  )
+  //       <DataGrid
+  //         autoHeight={true}
+  //         rows={abonos}
+  //         columns={columns}
+  //         pageSize={5}
+  //         disableSelectionOnClick={true}
+  //       />
+  //     </Wrapper>
+  //   </>
+  // )
 }
 
 export default Details

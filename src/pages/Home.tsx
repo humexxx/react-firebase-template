@@ -1,104 +1,117 @@
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Grid,
-  Paper,
-  Typography
-} from '@material-ui/core'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import React from 'react'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import Link from '@material-ui/core/Link'
+import Paper from '@material-ui/core/Paper'
+import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import LandingImage from '../assets/images/landing.jpg'
 
-import { Link } from 'react-router-dom'
-import routes from './routes'
-import Wrapper from '../components/Wrapper'
-import AppBar from '../components/AppBar'
-import { importData } from '../utils/importData'
-import { useEffect } from 'react'
-import landing from '../assets/images/landing.jpg'
-const IMPORT_DATA = false
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: { maxWidth: 720 },
-    center: { display: 'flex', justifyContent: 'center' }
-  })
-)
-
-const Home = () => {
-  const classes = useStyles()
-
-  useEffect(() => {
-    if (IMPORT_DATA) importData()
-  }, [])
-
+function Copyright() {
   return (
-    <>
-      <AppBar
-        title='Médicos'
-        actions={
-          <Button
-            color='primary'
-            size='small'
-            component={Link}
-            to={routes.signin}
-            variant='contained'
-          >
-            Ingresar
-          </Button>
-        }
-      />
-      <Wrapper>
-        <div className={classes.center}>
-          <Card className={classes.root}>
-            <CardActionArea>
-              <CardMedia
-                component='img'
-                alt='Médicos'
-                height='380'
-                image={landing}
-                title='Sistema de gestión de facturas de médicos'
-              />
-              <CardContent>
-                <Typography gutterBottom variant='h5' component='h2'>
-                  Sistema de gestión de facturas de médicos
-                </Typography>
-                <Typography variant='body2' color='textSecondary' component='p'>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-                  lacus turpis, porttitor finibus justo sollicitudin, faucibus
-                  venenatis ligula. Fusce posuere euismod varius. Mauris porta,
-                  ligula sed feugiat tristique, metus risus interdum mi,
-                  interdum luctus purus magna vitae tellus. Maecenas nec tempor
-                  ex. Cras fringilla commodo libero, id ultrices nulla venenatis
-                  id. Aenean id metus nec enim porta rhoncus at nec nunc.
-                  Aliquam lacus lectus, hendrerit eget fringilla sit amet,
-                  vehicula at nunc. Donec suscipit dolor dolor, quis euismod
-                  tellus vulputate sed.
-                </Typography>
-                <br />
-                <Typography variant='body2' color='textSecondary' component='p'>
-                  Vestibulum vel hendrerit mi, vel blandit dui. Nullam facilisis
-                  tincidunt iaculis. Maecenas quis enim nec urna facilisis
-                  pellentesque sed eget nibh. Fusce sit amet erat bibendum,
-                  tincidunt lorem vitae, convallis dolor. Suspendisse gravida
-                  augue eget purus semper dictum. Phasellus consectetur vehicula
-                  gravida. Nam hendrerit egestas metus. Vestibulum maximus sem
-                  eu erat placerat rutrum. Pellentesque vehicula vitae dolor a
-                  mattis. Quisque libero dui, euismod ac eleifend id, imperdiet
-                  sit amet ligula. Sed tristique, nibh at fermentum euismod, ex
-                  dui vehicula mi, sit amet sodales ante lectus vitae eros.
-                  Integer sed justo et justo facilisis finibus. Vivamus faucibus
-                  ex id quam pretium rhoncus quis sit amet ante. In vitae
-                  lacinia justo.
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </div>
-      </Wrapper>
-    </>
+    <Typography variant='body2' color='textSecondary' align='center'>
+      {'Copyright © '}
+      <Link color='inherit' href='https://material-ui.com/'>
+        Segrupex
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
   )
 }
 
-export default Home
+const useStyles = makeStyles(theme => ({
+  root: {
+    height: '100vh'
+  },
+  image: {
+    backgroundImage: `url(${LandingImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundColor:
+      theme.palette.type === 'light'
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+  },
+  paper: {
+    margin: theme.spacing(8, 4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2)
+  }
+}))
+
+export default function SignInSide() {
+  const classes = useStyles()
+
+  return (
+    <Grid container component='main' className={classes.root}>
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
+            Segrupex
+          </Typography>
+          <form className={classes.form} noValidate>
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='email'
+              label='Email'
+              name='email'
+              autoComplete='email'
+              autoFocus
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              label='Contraseña'
+              type='password'
+              id='password'
+              autoComplete='current-password'
+            />
+
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+            >
+              Ingresar
+            </Button>
+            <Box mt={5}>
+              <Copyright />
+            </Box>
+          </form>
+        </div>
+      </Grid>
+    </Grid>
+  )
+}
