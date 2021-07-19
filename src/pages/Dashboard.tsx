@@ -5,6 +5,10 @@ import routes from './routes'
 import Wrapper from '../components/Wrapper'
 import AppBar from '../components/AppBar'
 import { Box } from '@material-ui/core'
+import { useAuth } from '../context/AuthContext'
+import { useEffect, useState } from 'react'
+import functions from '../firebase/functions'
+import firestore from '../firebase/firestore'
 
 const columns: GridColDef[] = [
   { field: 'Consecutivo', headerName: 'Consecutivo', width: 175 },
@@ -36,69 +40,84 @@ const columns: GridColDef[] = [
   }
 ]
 
-const Dashboard: React.FC<any> = ({ history, user }) => {
-  return null
-  // const { facturas } = useFacturas(user.uid)
-  // const { loading, data: medico } = useFirestoreDocument(
-  //   "medicos",
-  //   user.uid as string
-  // )
-  // if (loading) return null
-  // facturas.forEach((f) => {
-  //   f.paciente_name = f.pacienteEntity?.ContactFirstName
-  //   f.fecha_ingreso = f.caso && f.caso["Fecha de Ingreso"]
-  //   f.seguro_name =
-  //     f.aseguradoraEntity && f.aseguradoraEntity["Nombre del Seguro"]
-  //   f.isCancelado = f.Cancelado ? "Cancelado" : "Sin cancelar"
-  // })
-  // console.log(facturas)
-  // return (
-  //   <>
-  //     <AppBar
-  //       title="Tablero"
-  //       actions={
-  //         <Button
-  //           color="primary"
-  //           size="small"
-  //           component={Link}
-  //           to={routes.signin}
-  //           variant="contained"
-  //         >
-  //           Salir
-  //         </Button>
-  //       }
-  //     />
-  //     <Wrapper>
-  //       <Typography paragraph variant="h5">
-  //         Registro de facturas
-  //       </Typography>
-  //       <Box mt={3} mb={5}>
-  //         <Typography paragraph>
-  //           <b>Nombre:</b> {user.displayName}
-  //         </Typography>
-  //         {medico.institucion && (
-  //           <Typography paragraph>
-  //             <b>Institucion:</b> {medico.institucion}
-  //           </Typography>
-  //         )}
-  //         {medico.especialidad && (
-  //           <Typography paragraph>
-  //             <b>Especialidad:</b> {medico.especialidad}
-  //           </Typography>
-  //         )}
-  //       </Box>
-  //       <DataGrid
-  //         autoHeight={true}
-  //         rows={facturas}
-  //         columns={columns}
-  //         pageSize={5}
-  //         onRowClick={(e) => {
-  //           history.push(`details/${e.id}`)
-  //         }}
-  //       />
-  //     </Wrapper>
-  //   </>
-  // )
+const Dashboard: React.FC<any> = ({ history }) => {
+  const { currentUser } = useAuth()
+  const [medico, setMedico] = useState<any>({})
+  const [facturas, setFacturas] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchData = async (uuid: string) => {
+      const snap = await firestore.doc(`medicos/${uuid}`).get()
+      const medico = snap.data() as { MedicoID: string }
+      const getFacturas = functions.httpsCallable('facturas-getByMedicoID')
+      const {
+        data: { response: facturas }
+      } = await getFacturas({ MedicoID: medico?.MedicoID })
+
+      setFacturas(facturas)
+      setMedico(medico)
+    }
+    if (currentUser.uid) fetchData(currentUser.uid)
+  }, [currentUser.uid])
+
+  const _facturas = facturas.map((factura: any, idx: number) => {
+    factura.id = idx
+    factura.paciente_name = factura.pacienteEntity?.ContactFirstName
+    factura.fecha_ingreso = factura.caso && factura.caso['Fecha de Ingreso']
+    factura.seguro_name =
+      factura.aseguradoraEntity &&
+      factura.aseguradoraEntity['Nombre del Seguro']
+    factura.isCancelado = factura.Cancelado ? 'Cancelado' : 'Sin cancelar'
+    return factura
+  })
+
+  return (
+    <>
+      <AppBar
+        title='Tablero'
+        actions={
+          <Button
+            color='primary'
+            size='small'
+            component={Link}
+            to={routes.signin}
+            variant='contained'
+          >
+            Salir
+          </Button>
+        }
+      />
+      <Wrapper>
+        <Typography paragraph variant='h5'>
+          Registro de facturas
+        </Typography>
+        <Box mt={3} mb={5}>
+          <Typography paragraph>
+            <b>Nombre:</b> {currentUser.displayName}
+          </Typography>
+          {medico.institucion && (
+            <Typography paragraph>
+              <b>Institucion:</b> {medico.institucion}
+            </Typography>
+          )}
+          {medico.especialidad && (
+            <Typography paragraph>
+              <b>Especialidad:</b> {medico.especialidad}
+            </Typography>
+          )}
+        </Box>
+        <DataGrid
+          autoHeight={true}
+          rows={_facturas}
+          columns={columns}
+          pageSize={5}
+          onRowClick={e => {
+            history.push(`details/${e.id}`)
+          }}
+        />
+      </Wrapper>
+    </>
+  )
 }
 
 export default Dashboard

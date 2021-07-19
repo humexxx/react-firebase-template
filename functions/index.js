@@ -5,3 +5,4 @@ admin.initializeApp()
 
 exports.import = require("./import/index")
 exports.pacientes = require("./pacientes/index")
+exports.facturas = require("./facturas/index")

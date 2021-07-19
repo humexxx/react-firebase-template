@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function SignInSide() {
+const Home: React.FC<any> = ({ history }) => {
   const classes = useStyles()
   const { login } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
@@ -74,6 +74,7 @@ export default function SignInSide() {
     e.preventDefault()
     try {
       await login(email, password)
+      history.push('/')
     } catch (e) {
       enqueueSnackbar(e.message, {
         variant: 'error',
@@ -143,3 +144,5 @@ export default function SignInSide() {
     </Grid>
   )
 }
+
+export default Home
