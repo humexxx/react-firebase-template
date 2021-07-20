@@ -39,7 +39,7 @@ const headCells: HeadCell[] = [
   {
     id: 'Factura',
     numeric: false,
-    label: 'Factura'
+    label: 'ID'
   },
   { id: 'Nombre_del_Asegurado', numeric: false, label: 'Paciente' },
   { id: 'Nombre del Seguro', numeric: false, label: 'Seguro' },
@@ -113,6 +113,8 @@ const Dashboard: React.FC<any> = ({ history }) => {
     if (currentUser.uid) fetchData(currentUser.uid)
   }, [currentUser.uid])
 
+  const handleOnRowClick = (id: string) => history.push(`/details/${id}`)
+
   return (
     <>
       <Typography paragraph variant='h5'>
@@ -133,7 +135,7 @@ const Dashboard: React.FC<any> = ({ history }) => {
           </Typography>
         )}
       </Box>
-      <EnhancedTable rows={facturas} />
+      <EnhancedTable rows={facturas} onRowClick={handleOnRowClick} />
     </>
   )
 }
@@ -247,9 +249,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   rows: IFactura[]
+  onRowClick: (id: string) => void
 }
 
-export const EnhancedTable: React.FC<Props> = ({ rows }) => {
+export const EnhancedTable: React.FC<Props> = ({ rows, onRowClick }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] =
@@ -284,7 +287,12 @@ export const EnhancedTable: React.FC<Props> = ({ rows }) => {
               {stableSort(rows as any, getComparator(order, orderBy)).map(
                 row => {
                   return (
-                    <TableRow hover key={row.Factura}>
+                    <TableRow
+                      hover
+                      key={row.Factura}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => onRowClick(row.Factura.toString())}
+                    >
                       <TableCell>{row.Factura}</TableCell>
                       <TableCell>{row.Nombre_del_Asegurado}</TableCell>
                       <TableCell>{row['Nombre del Seguro']}</TableCell>
