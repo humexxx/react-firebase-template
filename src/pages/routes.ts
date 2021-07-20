@@ -1,6 +1,7 @@
 const routes = {
   signin: '/signin',
   details: '/details/:factura_id',
+  profile: '/profile',
   dashboard: '/'
 }
 

@@ -1,9 +1,5 @@
-import { Button, Typography } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { Typography } from '@material-ui/core'
 import { DataGrid, GridColDef } from '@material-ui/data-grid'
-import routes from './routes'
-import Wrapper from '../components/Wrapper'
-import AppBar from '../components/AppBar'
 import { Box } from '@material-ui/core'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
@@ -73,49 +69,33 @@ const Dashboard: React.FC<any> = ({ history }) => {
 
   return (
     <>
-      <AppBar
-        title='Tablero'
-        actions={
-          <Button
-            color='primary'
-            size='small'
-            component={Link}
-            to={routes.signin}
-            variant='contained'
-          >
-            Salir
-          </Button>
-        }
-      />
-      <Wrapper>
-        <Typography paragraph variant='h5'>
-          Registro de facturas
+      <Typography paragraph variant='h5'>
+        Registro de facturas
+      </Typography>
+      <Box mt={3} mb={5}>
+        <Typography paragraph>
+          <b>Nombre:</b> {currentUser.displayName}
         </Typography>
-        <Box mt={3} mb={5}>
+        {medico.institucion && (
           <Typography paragraph>
-            <b>Nombre:</b> {currentUser.displayName}
+            <b>Institucion:</b> {medico.institucion}
           </Typography>
-          {medico.institucion && (
-            <Typography paragraph>
-              <b>Institucion:</b> {medico.institucion}
-            </Typography>
-          )}
-          {medico.especialidad && (
-            <Typography paragraph>
-              <b>Especialidad:</b> {medico.especialidad}
-            </Typography>
-          )}
-        </Box>
-        <DataGrid
-          autoHeight={true}
-          rows={_facturas}
-          columns={columns}
-          pageSize={5}
-          onRowClick={e => {
-            history.push(`details/${e.id}`)
-          }}
-        />
-      </Wrapper>
+        )}
+        {medico.especialidad && (
+          <Typography paragraph>
+            <b>Especialidad:</b> {medico.especialidad}
+          </Typography>
+        )}
+      </Box>
+      <DataGrid
+        autoHeight={true}
+        rows={_facturas}
+        columns={columns}
+        pageSize={5}
+        onRowClick={e => {
+          history.push(`details/${e.id}`)
+        }}
+      />
     </>
   )
 }

@@ -1,23 +1,54 @@
 import { ReactNode } from 'react'
+import MenuIcon from '@material-ui/icons/Menu'
+import clsx from 'clsx'
 import {
   AppBar as MaterialAppBar,
   Box,
   Toolbar,
   Typography,
+  useScrollTrigger,
   IconButton,
-  useScrollTrigger
+  makeStyles,
+  createStyles,
+  Theme
 } from '@material-ui/core'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import { Link } from 'react-router-dom'
-import NightsStayIcon from '@material-ui/icons/NightsStayOutlined'
+
+const drawerWidth = 240
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    appBar: {
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      })
+    },
+    appBarShift: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen
+      })
+    },
+    menuButton: {
+      marginRight: theme.spacing(2)
+    },
+    hide: {
+      display: 'none'
+    }
+  })
+)
 
 type Props = {
   title?: string
-  backTo?: string
   actions?: ReactNode
+  open: boolean
+  toggleOpen: () => void
 }
 
-const AppBar = (props: Props) => {
+const AppBar: React.FC<Props> = ({ title, actions, open, toggleOpen }) => {
+  const classes = useStyles()
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 40
@@ -26,25 +57,25 @@ const AppBar = (props: Props) => {
   return (
     <MaterialAppBar
       elevation={trigger ? 4 : 0}
-      position='sticky'
-      color='default'
+      position='static'
+      className={clsx(classes.appBar, {
+        [classes.appBarShift]: open
+      })}
     >
       <Toolbar>
-        {props.backTo && (
-          <IconButton
-            component={Link}
-            to={props.backTo}
-            color='inherit'
-            edge='start'
-          >
-            <ArrowBackIcon titleAccess='Navigate Back' />
-          </IconButton>
-        )}
-        {!props.backTo && <NightsStayIcon color='primary' fontSize='large' />}
+        <IconButton
+          edge='start'
+          className={clsx(classes.menuButton, open && classes.hide)}
+          onClick={toggleOpen}
+          color='inherit'
+          aria-label='menu'
+        >
+          <MenuIcon />
+        </IconButton>
         <Box ml={3} flex='auto'>
-          <Typography variant='h6'>{props.title}</Typography>
+          <Typography variant='h6'>{title}</Typography>
         </Box>
-        {props.actions}
+        {actions}
       </Toolbar>
     </MaterialAppBar>
   )

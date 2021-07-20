@@ -6,7 +6,6 @@ import { BrowserRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import ErrorBoundary from './components/ErrorBoundary'
 import Error from './pages/Error'
-import { RecoilRoot } from 'recoil'
 
 // material ui theme
 import theme from './theme'
@@ -21,11 +20,9 @@ ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <CssBaseline />
     <BrowserRouter>
-      <RecoilRoot>
-        <ErrorBoundary onError={console.log} errorComponent={<Error />}>
-          <App />
-        </ErrorBoundary>
-      </RecoilRoot>
+      <ErrorBoundary onError={console.log} errorComponent={<Error />}>
+        <App />
+      </ErrorBoundary>
     </BrowserRouter>
   </MuiThemeProvider>,
   document.getElementById('root')
