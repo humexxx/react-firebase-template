@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { LinearProgress, Typography } from '@material-ui/core'
 import { Box } from '@material-ui/core'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
@@ -21,7 +21,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
 interface IFactura {
-  Factura: number
+  MedicosID: number
+  Factura: string
   Nombre_del_Asegurado: string
   'Nombre del Seguro': string
   'Fecha de Ingreso': string
@@ -113,7 +114,7 @@ const Dashboard: React.FC<any> = ({ history }) => {
     if (currentUser.uid) fetchData(currentUser.uid)
   }, [currentUser.uid])
 
-  const handleOnRowClick = (id: string) => history.push(`/details/${id}`)
+  const handleOnRowClick = (id: number) => history.push(`/details/${id}`)
 
   return (
     <>
@@ -135,7 +136,11 @@ const Dashboard: React.FC<any> = ({ history }) => {
           </Typography>
         )}
       </Box>
-      <EnhancedTable rows={facturas} onRowClick={handleOnRowClick} />
+      <EnhancedTable
+        rows={facturas}
+        onRowClick={handleOnRowClick}
+        isLoading={loading}
+      />
     </>
   )
 }
@@ -249,10 +254,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   rows: IFactura[]
-  onRowClick: (id: string) => void
+  onRowClick: (id: number) => void
+  isLoading: boolean
 }
 
-export const EnhancedTable: React.FC<Props> = ({ rows, onRowClick }) => {
+export const EnhancedTable: React.FC<Props> = ({
+  rows,
+  onRowClick,
+  isLoading
+}) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] =
@@ -270,6 +280,7 @@ export const EnhancedTable: React.FC<Props> = ({ rows, onRowClick }) => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        {isLoading && <LinearProgress />}
         <EnhancedTableToolbar />
         <TableContainer>
           <Table
@@ -289,9 +300,9 @@ export const EnhancedTable: React.FC<Props> = ({ rows, onRowClick }) => {
                   return (
                     <TableRow
                       hover
-                      key={row.Factura}
+                      key={row.MedicosID}
                       style={{ cursor: 'pointer' }}
-                      onClick={() => onRowClick(row.Factura.toString())}
+                      onClick={() => onRowClick(row.MedicosID as number)}
                     >
                       <TableCell>{row.Factura}</TableCell>
                       <TableCell>{row.Nombre_del_Asegurado}</TableCell>

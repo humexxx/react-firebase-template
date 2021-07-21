@@ -12,6 +12,8 @@ import {
   createStyles,
   Theme
 } from '@material-ui/core'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import { Link } from 'react-router-dom'
 
 const drawerWidth = 240
 
@@ -45,9 +47,16 @@ type Props = {
   actions?: ReactNode
   open: boolean
   toggleOpen: () => void
+  backTo?: string
 }
 
-const AppBar: React.FC<Props> = ({ title, actions, open, toggleOpen }) => {
+const AppBar: React.FC<Props> = ({
+  title,
+  actions,
+  open,
+  toggleOpen,
+  backTo
+}) => {
   const classes = useStyles()
   const trigger = useScrollTrigger({
     disableHysteresis: true,
@@ -72,6 +81,11 @@ const AppBar: React.FC<Props> = ({ title, actions, open, toggleOpen }) => {
         >
           <MenuIcon />
         </IconButton>
+        {backTo && (
+          <IconButton component={Link} to={backTo} color='inherit' edge='start'>
+            <ArrowBackIcon titleAccess='Navigate Back' />
+          </IconButton>
+        )}
         <Box ml={3} flex='auto'>
           <Typography variant='h6'>{title}</Typography>
         </Box>

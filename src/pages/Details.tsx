@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { LinearProgress, Typography } from '@material-ui/core'
 import { Box } from '@material-ui/core'
 import { useEffect, useState } from 'react'
 import functions from '../firebase/functions'
@@ -91,12 +91,10 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map(el => el[0])
 }
 
-const Details: React.FC<any> = ({ history, match }) => {
+const Details: React.FC<any> = ({ match }) => {
   const factura_id = match.params.factura_id
   const [detalles, setDetalles] = useState<IDetallesCaso | undefined>(undefined)
   const [abonos, setAbonos] = useState<IAbonoFactura[]>([])
-
-  console.log(abonos)
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -117,8 +115,6 @@ const Details: React.FC<any> = ({ history, match }) => {
     }
     fetchData(factura_id)
   }, [factura_id])
-
-  const handleOnRowClick = (id: number) => history.push(`/details/${id}`)
 
   return (
     <>
@@ -142,7 +138,7 @@ const Details: React.FC<any> = ({ history, match }) => {
           </Typography>
         )}
       </Box>
-      <EnhancedTable rows={abonos} onRowClick={handleOnRowClick} />
+      <EnhancedTable rows={abonos} isLoading={loading} />
     </>
   )
 }
@@ -256,10 +252,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   rows: IAbonoFactura[]
-  onRowClick: (id: number) => void
+  isLoading: boolean
 }
 
-export const EnhancedTable: React.FC<Props> = ({ rows, onRowClick }) => {
+export const EnhancedTable: React.FC<Props> = ({ rows, isLoading }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof IAbonoFactura>('Fecha')
@@ -276,6 +272,7 @@ export const EnhancedTable: React.FC<Props> = ({ rows, onRowClick }) => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        {isLoading && <LinearProgress />}
         <EnhancedTableToolbar />
         <TableContainer>
           <Table

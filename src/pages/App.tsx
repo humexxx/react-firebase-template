@@ -57,7 +57,8 @@ const App = () => {
   )
 }
 
-const AdminRoutes = () => {
+const AdminRoutes = (props: any) => {
+  console.log(props)
   const classes = useStyles()
   const { logout } = useAuth()
   const [open, setOpen] = useState(false)
@@ -67,6 +68,9 @@ const AdminRoutes = () => {
         open={open}
         toggleOpen={() => setOpen(!open)}
         title='Segrupex'
+        backTo={
+          props.location.pathname !== routes.dashboard ? routes.dashboard : ''
+        }
         actions={
           <Tooltip title='Salir'>
             <IconButton color='inherit' onClick={logout}>
