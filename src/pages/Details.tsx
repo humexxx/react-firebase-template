@@ -132,13 +132,15 @@ const Details: React.FC<any> = ({ match }) => {
             <b>Procedimiento:</b> {detalles.Procedimiento}
           </Typography>
         )}
+      </Box>
+      <EnhancedTable rows={abonos} isLoading={loading} />
+      <Box mt={3} mb={5}>
         {detalles?.['Notas Médicas'] && (
           <Typography paragraph>
             <b>Notas médicas:</b> {detalles['Notas Médicas']}
           </Typography>
         )}
       </Box>
-      <EnhancedTable rows={abonos} isLoading={loading} />
     </>
   )
 }
