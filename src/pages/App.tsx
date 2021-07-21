@@ -19,6 +19,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import Sidebar from '../components/Sidebar'
 import { useState } from 'react'
 import clsx from 'clsx'
+import { Profile } from './Profile'
 
 const drawerWidth = 240
 
@@ -102,10 +103,6 @@ const AdminRoutes = (props: any) => {
       </main>
     </>
   )
-}
-
-const Profile = () => {
-  return null
 }
 
 export default App
