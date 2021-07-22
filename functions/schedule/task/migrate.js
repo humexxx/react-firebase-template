@@ -11,10 +11,18 @@ function createUser(medico) {
   })
 }
 
-exports.migrate = functions.pubsub.schedule("20 30 * * *").onRun(async () => {
-  const pool = await createPool()
-  const response = await pool.request().query(
-    `SELECT [MedicoID]
+const runtimeOpts = {
+  timeoutSeconds: 540,
+}
+
+exports.migrate = functions
+  .runWith(runtimeOpts)
+  .pubsub.schedule("20 21 * * *")
+  .timeZone("America/Costa_Rica")
+  .onRun(async () => {
+    const pool = await createPool()
+    const response = await pool.request().query(
+      `SELECT [MedicoID]
       ,[Medico]
       ,[Especialidad]
       ,[Institucion]
@@ -28,32 +36,32 @@ exports.migrate = functions.pubsub.schedule("20 30 * * *").onRun(async () => {
       ,[Fax]
       ,[Email]
       FROM [medicos].[dbo].[Medicos]`
-  )
+    )
 
-  const medicos = response.recordsets[0]
-  for (let medico of medicos) {
-    try {
-      const snap = await admin
-        .firestore()
-        .collection("medicos")
-        .where("MedicoID", "===", medico.MedicoID)
-        .get()
+    const medicos = response.recordsets[0]
+    for (let medico of medicos) {
+      try {
+        const snap = await admin
+          .firestore()
+          .collection("medicos")
+          .where("MedicoID", "==", medico.MedicoID)
+          .get()
 
-      const uuid = snap.empty
-        ? (await createUser(medico)).uid
-        : (await admin.auth().getUser(snap.docs[0].id)).uid
+        const uid = snap.empty
+          ? (await createUser(medico)).uid
+          : (await admin.auth().getUser(snap.docs[0].id)).uid
 
-      await admin
-        .firestore()
-        .doc(`medicos/${uuid}`)
-        .set({
-          uuid,
-          ...medico,
-        })
-    } catch (err) {
-      functions.logger.log(err)
+        await admin
+          .firestore()
+          .doc(`medicos/${uid}`)
+          .set({
+            uid,
+            ...medico,
+          })
+      } catch (err) {
+        functions.logger.log(err)
+      }
     }
-  }
 
-  return null
-})
+    return null
+  })
