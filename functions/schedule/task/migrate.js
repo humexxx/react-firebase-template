@@ -17,25 +17,23 @@ const runtimeOpts = {
 
 exports.migrate = functions
   .runWith(runtimeOpts)
-  .pubsub.schedule("0 0 * * 0,3")
-  .timeZone("America/Costa_Rica")
-  .onRun(async () => {
+  .https.onRequest(async (_, res) => {
     const pool = await createPool()
     const response = await pool.request().query(
       `SELECT [MedicoID]
-      ,[Medico]
-      ,[Especialidad]
-      ,[Institucion]
-      ,[Empresa]
-      ,[Codigo]
-      ,[Direccion]
-      ,[Telefono1]
-      ,[Extension]
-      ,[Telefono2]
-      ,[Telefono3]
-      ,[Fax]
-      ,[Email]
-      FROM [medicos].[dbo].[Medicos]`
+    ,[Medico]
+    ,[Especialidad]
+    ,[Institucion]
+    ,[Empresa]
+    ,[Codigo]
+    ,[Direccion]
+    ,[Telefono1]
+    ,[Extension]
+    ,[Telefono2]
+    ,[Telefono3]
+    ,[Fax]
+    ,[Email]
+    FROM [medicos].[dbo].[Medicos]`
     )
 
     const medicos = response.recordsets[0]
@@ -63,5 +61,5 @@ exports.migrate = functions
       }
     }
 
-    return null
+    res.status(200)
   })
