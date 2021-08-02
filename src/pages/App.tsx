@@ -59,7 +59,6 @@ const App = () => {
 }
 
 const AdminRoutes = (props: any) => {
-  console.log(props)
   const classes = useStyles()
   const { logout } = useAuth()
   const [open, setOpen] = useState(false)

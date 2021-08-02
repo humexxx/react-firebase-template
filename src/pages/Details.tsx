@@ -20,7 +20,8 @@ import FilterListIcon from '@material-ui/icons/FilterList'
 interface IAbonoFactura {
   AbonoMedicoID: number
   Recibo: string
-  Fecha: Date
+  Fecha: string
+  date_start: Date
   Ajustes: string | null
   'Abono en colones': string
 }
@@ -43,7 +44,7 @@ const headCells: HeadCell[] = [
     numeric: false,
     label: 'Recibo'
   },
-  { id: 'Fecha', numeric: false, label: 'Fecha' },
+  { id: 'date_start', numeric: false, label: 'Fecha' },
   { id: 'Ajustes', numeric: true, label: 'Ajuste' },
   { id: 'Abono en colones', numeric: true, label: 'Monto' }
 ]
@@ -61,10 +62,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD'
-
-  // These options are needed to round to whole numbers if that's what you want.
-  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
 
 type Order = 'asc' | 'desc'
@@ -110,7 +107,12 @@ const Details: React.FC<any> = ({ match }) => {
       } = await getAbonos({ factura_id: factura_id })
 
       setDetalles(detalles[0] as IDetallesCaso)
-      setAbonos(abonos)
+      setAbonos(
+        abonos.map((abono: IAbonoFactura) => {
+          abono.date_start = new Date(abono['Fecha'])
+          return abono
+        })
+      )
       setLoading(false)
     }
     fetchData(factura_id)
@@ -259,8 +261,9 @@ type Props = {
 
 export const EnhancedTable: React.FC<Props> = ({ rows, isLoading }) => {
   const classes = useStyles()
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof IAbonoFactura>('Fecha')
+  const [order, setOrder] = React.useState<Order>('desc')
+  const [orderBy, setOrderBy] =
+    React.useState<keyof IAbonoFactura>('date_start')
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -295,7 +298,10 @@ export const EnhancedTable: React.FC<Props> = ({ rows, isLoading }) => {
                     <TableRow hover key={row.Recibo}>
                       <TableCell>{row.Recibo}</TableCell>
                       <TableCell>
-                        {new Date(row.Fecha).toLocaleDateString()}
+                        {new Date(row.date_start.toString()).toLocaleString(
+                          'es-US',
+                          { dateStyle: 'medium' }
+                        )}
                       </TableCell>
                       <TableCell align='right'>
                         {formatter.format(
@@ -313,7 +319,8 @@ export const EnhancedTable: React.FC<Props> = ({ rows, isLoading }) => {
               )}
               <TableRow>
                 <TableCell />
-                <TableCell align='right'>Total</TableCell>
+                <TableCell align='right'>SubTotal</TableCell>
+
                 <TableCell align='right'>
                   {formatter.format(
                     rows.reduce(
@@ -331,6 +338,26 @@ export const EnhancedTable: React.FC<Props> = ({ rows, isLoading }) => {
                         parseFloat(row['Abono en colones'].toString()) + acc,
                       0
                     )
+                  )}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell />
+                <TableCell align='right'>Total</TableCell>
+                <TableCell />
+                <TableCell align='right'>
+                  {formatter.format(
+                    rows.reduce(
+                      (acc: number, row) =>
+                        parseFloat((row.Ajustes ? row.Ajustes : 0).toString()) +
+                        acc,
+                      0
+                    ) +
+                      rows.reduce(
+                        (acc: number, row) =>
+                          parseFloat(row['Abono en colones'].toString()) + acc,
+                        0
+                      )
                   )}
                 </TableCell>
               </TableRow>

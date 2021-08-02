@@ -26,6 +26,7 @@ interface IFactura {
   Nombre_del_Asegurado: string
   'Nombre del Seguro': string
   'Fecha de Ingreso': string
+  date_start: Date
   Cancelado: boolean
   'Monto Total': string
 }
@@ -44,7 +45,7 @@ const headCells: HeadCell[] = [
   },
   { id: 'Nombre_del_Asegurado', numeric: false, label: 'Paciente' },
   { id: 'Nombre del Seguro', numeric: false, label: 'Seguro' },
-  { id: 'Fecha de Ingreso', numeric: false, label: 'Ingreso' },
+  { id: 'date_start', numeric: false, label: 'Ingreso' },
   { id: 'Cancelado', numeric: false, label: 'Cancelado' },
   { id: 'Monto Total', numeric: true, label: 'Monto' }
 ]
@@ -62,10 +63,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 const formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD'
-
-  // These options are needed to round to whole numbers if that's what you want.
-  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 })
 
 type Order = 'asc' | 'desc'
@@ -107,7 +104,16 @@ const Dashboard: React.FC<any> = ({ history }) => {
         data: { response: facturas }
       } = await getFacturas({ MedicoID: medico?.MedicoID })
 
-      setFacturas(facturas)
+      setFacturas(
+        facturas.map((factura: IFactura) => {
+          factura.date_start = new Date(
+            parseInt(factura['Fecha de Ingreso'].split('/')[2]),
+            parseInt(factura['Fecha de Ingreso'].split('/')[1]) - 1,
+            parseInt(factura['Fecha de Ingreso'].split('/')[0])
+          )
+          return factura
+        })
+      )
       setMedico(medico)
       setLoading(false)
     }
@@ -217,11 +223,11 @@ const EnhancedTableToolbar = () => {
       >
         Facturas
       </Typography>
-      <Tooltip title='Filter list'>
-        <IconButton aria-label='filter list' disabled>
+      {/* <Tooltip title="Filter list">
+        <IconButton aria-label="filter list" disabled>
           <FilterListIcon />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
     </Toolbar>
   )
 }
@@ -264,9 +270,8 @@ export const EnhancedTable: React.FC<Props> = ({
   isLoading
 }) => {
   const classes = useStyles()
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] =
-    React.useState<keyof IFactura>('Fecha de Ingreso')
+  const [order, setOrder] = React.useState<Order>('desc')
+  const [orderBy, setOrderBy] = React.useState<keyof IFactura>('date_start')
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -307,7 +312,12 @@ export const EnhancedTable: React.FC<Props> = ({
                       <TableCell>{row.Factura}</TableCell>
                       <TableCell>{row.Nombre_del_Asegurado}</TableCell>
                       <TableCell>{row['Nombre del Seguro']}</TableCell>
-                      <TableCell>{row['Fecha de Ingreso']}</TableCell>
+                      <TableCell>
+                        {new Date(row.date_start.toString()).toLocaleString(
+                          'es-US',
+                          { dateStyle: 'medium' }
+                        )}
+                      </TableCell>
                       <TableCell>
                         {row.Cancelado ? (
                           <Chip

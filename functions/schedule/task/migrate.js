@@ -17,7 +17,7 @@ const runtimeOpts = {
 
 exports.migrate = functions
   .runWith(runtimeOpts)
-  .pubsub.schedule("20 21 * * *")
+  .pubsub.schedule("0 0 * * 0,3")
   .timeZone("America/Costa_Rica")
   .onRun(async () => {
     const pool = await createPool()
