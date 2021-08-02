@@ -37,6 +37,7 @@ exports.createUsers = functions
     )
 
     const medicos = response.recordsets[0]
+    functions.logger.log(medicos.length)
     let accountsCreated = 0
     for (let medico of medicos) {
       try {
@@ -50,6 +51,7 @@ exports.createUsers = functions
         const uid = snap.empty
           ? (await createUser(medico)).uid
           : (await admin.auth().getUser(snap.docs[0].id)).uid
+        if (snap.empty) functions.logger.log(`user created: ${uid}`)
 
         await admin
           .firestore()
