@@ -33,7 +33,8 @@ exports.createUsers = functions
     ,[Telefono3]
     ,[Fax]
     ,[Email]
-    FROM [medicos].[dbo].[Medicos]`
+    FROM [medicos].[dbo].[Medicos]
+    order by [MedicoID] desc`
     )
 
     const medicos = response.recordsets[0]
