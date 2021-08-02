@@ -15,7 +15,7 @@ const runtimeOpts = {
   timeoutSeconds: 540,
 }
 
-exports.migrate = functions
+exports.createUsers = functions
   .runWith(runtimeOpts)
   .https.onRequest(async (_, res) => {
     const pool = await createPool()
@@ -37,6 +37,7 @@ exports.migrate = functions
     )
 
     const medicos = response.recordsets[0]
+    let accountsCreated = 0
     for (let medico of medicos) {
       try {
         const snap = await admin
@@ -45,6 +46,7 @@ exports.migrate = functions
           .where("MedicoID", "==", medico.MedicoID)
           .get()
 
+        if (snap.empty) accountsCreated++
         const uid = snap.empty
           ? (await createUser(medico)).uid
           : (await admin.auth().getUser(snap.docs[0].id)).uid
@@ -61,5 +63,5 @@ exports.migrate = functions
       }
     }
 
-    res.status(200)
+    res.status(200).send({ accountsCreated })
   })
